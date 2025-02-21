@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-
 import {
   SparklesCore,
   TextGenerateEffect,
@@ -18,82 +17,68 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (typeof window !== "undefined") {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 20);
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
   }, []);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
+    if (typeof window !== "undefined") {
+      let timeoutId: NodeJS.Timeout;
 
-    const handleSectionVisibility = () => {
-      const sections = ["home", "skills", "projects", "contact"];
-      const scrollPosition =
-        typeof window !== "undefined"
-          ? window.scrollY + window.innerHeight / 2
-          : 0;
+      const handleSectionVisibility = () => {
+        const sections = ["home", "skills", "projects", "contact"];
+        const scrollPosition = window.scrollY + window.innerHeight / 2;
 
-      let newActiveSection = activeSection;
+        let newActiveSection = activeSection;
 
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { top, bottom } = element.getBoundingClientRect();
-          const windowY = typeof window !== "undefined" ? window.scrollY : 0;
-          const elementTop = top + windowY;
-          const elementBottom = bottom + windowY;
+        for (const section of sections) {
+          const element = document.getElementById(section);
+          if (element) {
+            const { top, bottom } = element.getBoundingClientRect();
+            const elementTop = top + window.scrollY;
+            const elementBottom = bottom + window.scrollY;
 
-          // Check if the section is in the viewport
-          if (
-            typeof scrollPosition === "number" &&
-            scrollPosition >= elementTop &&
-            scrollPosition < elementBottom
-          ) {
-            newActiveSection = section;
-            break; // Exit the loop once the active section is found
+            if (
+              scrollPosition >= elementTop &&
+              scrollPosition < elementBottom
+            ) {
+              newActiveSection = section;
+              break;
+            }
           }
         }
-      }
 
-      // Update the active section only if it has changed
-      if (newActiveSection !== activeSection) {
-        setActiveStatus(newActiveSection);
-      }
-    };
+        if (newActiveSection !== activeSection) {
+          setActiveStatus(newActiveSection);
+        }
+      };
 
-    const debouncedScrollHandler = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleSectionVisibility, 50); // Shorter debounce time
-    };
+      const debouncedScrollHandler = () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(handleSectionVisibility, 50);
+      };
 
-    window.addEventListener("scroll", debouncedScrollHandler);
-    return () => {
-      window.removeEventListener("scroll", debouncedScrollHandler);
-      clearTimeout(timeoutId);
-    };
+      window.addEventListener("scroll", debouncedScrollHandler);
+      return () => {
+        window.removeEventListener("scroll", debouncedScrollHandler);
+        clearTimeout(timeoutId);
+      };
+    }
   }, [activeSection, setActiveStatus]);
 
-  const navItems = [
-    { id: "home", label: "Home" },
-    { id: "skills", label: "Skills" },
-    { id: "projects", label: "Projects" },
-    { id: "contact", label: "Contact" },
-  ];
-
-  interface ScrollToSectionProps {
-    sectionId: string;
-  }
-
-  const scrollToSection = ({ sectionId }: ScrollToSectionProps) => {
+  const scrollToSection = ({ sectionId }: { sectionId: string }) => {
     if (typeof window !== "undefined" && typeof document !== "undefined") {
       const element = document.getElementById(sectionId);
       if (element) {
-        const offset = 80; // Adjust this value based on your header height
+        const offset = 80;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.scrollY - offset;
 
@@ -102,12 +87,18 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
           behavior: "smooth",
         });
 
-        // Immediately update the active section on click
         setActiveStatus(sectionId);
-        setIsMobileMenuOpen(false); // Close the mobile menu after clicking a link
+        setIsMobileMenuOpen(false);
       }
     }
   };
+
+  const navItems = [
+    { id: "home", label: "Home" },
+    { id: "skills", label: "Skills" },
+    { id: "projects", label: "Projects" },
+    { id: "contact", label: "Contact" },
+  ];
 
   return (
     <motion.header
@@ -120,7 +111,6 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
     >
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <nav className='flex justify-between items-center'>
-          {/* Logo/Name */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             className='text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text'
@@ -128,17 +118,14 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
             VG
           </motion.div>
 
-          {/* Navigation Items - Responsive Container */}
           <div className='flex items-center'>
-            {/* Main Navigation */}
             <ul className='hidden sm:flex items-center space-x-2 md:space-x-4'>
-              {navItems?.map((item) => (
+              {navItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection({ sectionId: item.id })}
                     className='relative px-3 py-2 group'
                   >
-                    {/* Background highlight */}
                     {activeSection === item.id && (
                       <motion.div
                         layoutId='activeSection'
@@ -148,8 +135,6 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
                         transition={{ duration: 0.3 }}
                       />
                     )}
-
-                    {/* Text with gradient on hover/active */}
                     <span
                       className={`relative z-10 transition-all duration-300 text-sm md:text-base ${
                         activeSection === item.id
@@ -159,8 +144,6 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
                     >
                       {item.label}
                     </span>
-
-                    {/* Bottom border animation */}
                     <motion.div
                       className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 transform origin-left scale-x-0 transition-transform duration-300 ${
                         activeSection === item.id
@@ -173,10 +156,9 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
               ))}
             </ul>
 
-            {/* Mobile Menu Button */}
             <button
               className='sm:hidden p-2'
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} // Toggle mobile menu
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               <svg
                 className='w-6 h-6 text-zinc-400'
@@ -195,7 +177,6 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
           </div>
         </nav>
 
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -204,7 +185,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
             className='sm:hidden mt-4 bg-black/80 backdrop-blur-md rounded-lg p-4'
           >
             <ul className='flex flex-col space-y-2'>
-              {navItems?.map((item) => (
+              {navItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection({ sectionId: item.id })}
@@ -225,6 +206,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
     </motion.header>
   );
 };
+
 const Home = () => {
   const [activeSection, setActiveSection] = useState("home");
 
@@ -295,7 +277,6 @@ const Home = () => {
           transition={{ duration: 0.8 }}
           className='relative z-10 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8'
         >
-          {/* Text Content */}
           <div className='flex-1 text-center md:text-left'>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -322,9 +303,14 @@ const Home = () => {
             >
               <button
                 onClick={() => {
-                  const projectsSection = document.getElementById("projects");
-                  if (projectsSection) {
-                    projectsSection.scrollIntoView({ behavior: "smooth" });
+                  if (
+                    typeof window !== "undefined" &&
+                    typeof document !== "undefined"
+                  ) {
+                    const projectsSection = document.getElementById("projects");
+                    if (projectsSection) {
+                      projectsSection.scrollIntoView({ behavior: "smooth" });
+                    }
                   }
                 }}
                 className='px-6 py-3 text-lg font-medium text-zinc-300 hover:text-blue-400 transition-colors rounded-lg border border-zinc-700 hover:border-blue-400'
@@ -334,7 +320,6 @@ const Home = () => {
             </motion.div>
           </div>
 
-          {/* Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -343,16 +328,16 @@ const Home = () => {
           >
             <div className='relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-blue-400/20 shadow-lg'>
               <Image
-                src={profilePic} // Replace with your image path
+                src={profilePic}
                 alt='Vijayakanth G'
                 className='w-full h-full object-cover'
               />
-              {/* Glow Effect */}
               <div className='absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-500/10 rounded-full'></div>
             </div>
           </motion.div>
         </motion.div>
       </section>
+
       {/* Skills Section */}
       <section
         id='skills'
@@ -375,7 +360,7 @@ const Home = () => {
           </motion.div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8'>
-            {skills?.map((skill, index) => (
+            {skills.map((skill, index) => (
               <motion.div
                 key={skill.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -415,7 +400,7 @@ const Home = () => {
           </motion.div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8'>
-            {projects?.map((project, index) => (
+            {projects.map((project, index) => (
               <motion.div
                 key={project.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -450,9 +435,6 @@ const Home = () => {
             <h2 className='text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4'>
               Get in Touch
             </h2>
-            {/* <p className='text-zinc-400 text-lg max-w-2xl mx-auto'>
-              Let's discuss your next project
-            </p> */}
           </motion.div>
 
           <div className='max-w-2xl mx-auto space-y-6'>
@@ -472,7 +454,7 @@ const Home = () => {
                 text: "LinkedIn Profile",
                 href: "https://linkedin.com/in/vijayakanth-grandhi",
               },
-            ]?.map((contact, index) => (
+            ].map((contact, index) => (
               <motion.div
                 key={contact.text}
                 initial={{ opacity: 0, y: 20 }}
@@ -517,4 +499,5 @@ const Home = () => {
     </div>
   );
 };
+
 export default Home;
