@@ -303,10 +303,7 @@ const Home = () => {
             >
               <button
                 onClick={() => {
-                  if (
-                    typeof window !== "undefined" &&
-                    typeof document !== "undefined"
-                  ) {
+                  if (typeof document !== "undefined") {
                     const projectsSection = document.getElementById("projects");
                     if (projectsSection) {
                       projectsSection.scrollIntoView({ behavior: "smooth" });
