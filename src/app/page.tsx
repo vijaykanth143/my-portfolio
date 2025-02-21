@@ -33,7 +33,10 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
 
     const handleSectionVisibility = () => {
       const sections = ["home", "skills", "projects", "contact"];
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      const scrollPosition =
+        typeof window !== "undefined"
+          ? window.scrollY + window.innerHeight / 2
+          : 0;
 
       let newActiveSection = activeSection;
 
@@ -41,11 +44,16 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
         const element = document.getElementById(section);
         if (element) {
           const { top, bottom } = element.getBoundingClientRect();
-          const elementTop = top + window.scrollY;
-          const elementBottom = bottom + window.scrollY;
+          const windowY = typeof window !== "undefined" ? window.scrollY : 0;
+          const elementTop = top + windowY;
+          const elementBottom = bottom + windowY;
 
           // Check if the section is in the viewport
-          if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
+          if (
+            typeof scrollPosition === "number" &&
+            scrollPosition >= elementTop &&
+            scrollPosition < elementBottom
+          ) {
             newActiveSection = section;
             break; // Exit the loop once the active section is found
           }
@@ -82,20 +90,22 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
   }
 
   const scrollToSection = ({ sectionId }: ScrollToSectionProps) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const offset = 80; // Adjust this value based on your header height
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+    if (typeof window !== "undefined" && typeof document !== "undefined") {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const offset = 80; // Adjust this value based on your header height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
 
-      // Immediately update the active section on click
-      setActiveStatus(sectionId);
-      setIsMobileMenuOpen(false); // Close the mobile menu after clicking a link
+        // Immediately update the active section on click
+        setActiveStatus(sectionId);
+        setIsMobileMenuOpen(false); // Close the mobile menu after clicking a link
+      }
     }
   };
 
@@ -122,7 +132,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
           <div className='flex items-center'>
             {/* Main Navigation */}
             <ul className='hidden sm:flex items-center space-x-2 md:space-x-4'>
-              {navItems.map((item) => (
+              {navItems?.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection({ sectionId: item.id })}
@@ -194,7 +204,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
             className='sm:hidden mt-4 bg-black/80 backdrop-blur-md rounded-lg p-4'
           >
             <ul className='flex flex-col space-y-2'>
-              {navItems.map((item) => (
+              {navItems?.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection({ sectionId: item.id })}
@@ -365,7 +375,7 @@ const Home = () => {
           </motion.div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8'>
-            {skills.map((skill, index) => (
+            {skills?.map((skill, index) => (
               <motion.div
                 key={skill.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -405,7 +415,7 @@ const Home = () => {
           </motion.div>
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8'>
-            {projects.map((project, index) => (
+            {projects?.map((project, index) => (
               <motion.div
                 key={project.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -462,7 +472,7 @@ const Home = () => {
                 text: "LinkedIn Profile",
                 href: "https://linkedin.com/in/vijayakanth-grandhi",
               },
-            ].map((contact, index) => (
+            ]?.map((contact, index) => (
               <motion.div
                 key={contact.text}
                 initial={{ opacity: 0, y: 20 }}
