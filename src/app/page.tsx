@@ -75,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
   }, [activeSection, setActiveStatus]);
 
   const scrollToSection = ({ sectionId }: { sectionId: string }) => {
-    if (typeof window !== "undefined" && typeof document !== "undefined") {
+    if (typeof window !== "undefined") {
       const element = document.getElementById(sectionId);
       if (element) {
         const offset = 80;
