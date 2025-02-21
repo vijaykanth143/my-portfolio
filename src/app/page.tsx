@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   SparklesCore,
+  StunningButton,
   TextGenerateEffect,
 } from "@/components/ui/animated-cards";
 import { ProjectCard, SkillCard } from "@/components/ui/project-cards";
@@ -256,6 +257,14 @@ const Home = () => {
     },
   ];
 
+  const handleDownloadResume = () => {
+    // Replace with your resume download link
+    const resumeUrl = "/resume.pdf";
+    const link = document.createElement("a");
+    link.href = resumeUrl;
+    link.download = "Vijayakanth_Resume.pdf";
+    link.click();
+  };
   return (
     <div className='min-h-screen bg-black text-white overflow-x-hidden'>
       <Header
@@ -299,7 +308,7 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
-              className='mt-8'
+              className='mt-8 flex gap-4 justify-center md:justify-start'
             >
               <button
                 onClick={() => {
@@ -314,6 +323,11 @@ const Home = () => {
               >
                 View My Work
               </button>
+              {/* Download Resume Button with Moving Border */}
+
+              <StunningButton onClick={handleDownloadResume}>
+                Download Resume
+              </StunningButton>
             </motion.div>
           </div>
 
@@ -334,7 +348,6 @@ const Home = () => {
           </motion.div>
         </motion.div>
       </section>
-
       {/* Skills Section */}
       <section
         id='skills'

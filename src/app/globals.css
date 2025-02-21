@@ -94,3 +94,12 @@ body {
   scrollbar-width: thin; /* "auto" or "thin" */
   scrollbar-color: #4f46e5 #1a1a1a; /* thumb and track color */
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
