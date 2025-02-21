@@ -259,11 +259,19 @@ const Home = () => {
 
   const handleDownloadResume = () => {
     // Replace with your resume download link
-    const resumeUrl = "/resume.pdf";
-    const link = document.createElement("a");
-    link.href = resumeUrl;
-    link.download = "Vijayakanth_Resume.pdf";
-    link.click();
+    // using Java Script method to get PDF file
+    fetch("/vijaykanth.G.pdf").then((response) => {
+      response.blob().then((blob) => {
+        // Creating new object of PDF file
+        const fileURL = window.URL.createObjectURL(blob);
+
+        // Setting various property values
+        const alink = document.createElement("a");
+        alink.href = fileURL;
+        alink.download = "Vijayakanth-Resume.pdf";
+        alink.click();
+      });
+    });
   };
   return (
     <div className='min-h-screen bg-black text-white overflow-x-hidden'>
