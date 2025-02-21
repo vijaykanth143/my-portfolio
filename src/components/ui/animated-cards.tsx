@@ -97,6 +97,8 @@ export const TextGenerateEffect = ({ words }: { words: string }) => {
 
 export const SparklesCore = () => {
   const particles = Array.from({ length: 50 });
+  const innerWidth = typeof window !== "undefined" ? window.innerWidth : 0;
+  const innerHeight = typeof window !== "undefined" ? window.innerHeight : 0;
   return (
     <div className='absolute inset-0 pointer-events-none'>
       {particles.map((_, i) => (
@@ -105,14 +107,14 @@ export const SparklesCore = () => {
           initial={{
             opacity: 0,
             scale: 0,
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * innerWidth,
+            y: Math.random() * innerHeight,
           }}
           animate={{
             opacity: [0, 1, 0],
             scale: [0, 1, 0],
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * innerWidth,
+            y: Math.random() * innerHeight,
           }}
           transition={{
             duration: Math.random() * 2 + 1,
