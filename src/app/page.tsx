@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import {
-  MovingBorder,
   SparklesCore,
   TextGenerateEffect,
 } from "@/components/ui/animated-cards";
@@ -12,7 +11,12 @@ import { ProjectCard, SkillCard } from "@/components/ui/project-cards";
 import profilePic from "@/app/assets/vijaykanth.jpg";
 import Image from "next/image";
 
-const Header = ({ activeSection, setActiveStatus }) => {
+interface HeaderProps {
+  activeSection: string;
+  setActiveStatus: (section: string) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
 
@@ -25,7 +29,7 @@ const Header = ({ activeSection, setActiveStatus }) => {
   }, []);
 
   useEffect(() => {
-    let timeoutId;
+    let timeoutId: NodeJS.Timeout;
 
     const handleSectionVisibility = () => {
       const sections = ["home", "skills", "projects", "contact"];
@@ -73,7 +77,11 @@ const Header = ({ activeSection, setActiveStatus }) => {
     { id: "contact", label: "Contact" },
   ];
 
-  const scrollToSection = (sectionId) => {
+  interface ScrollToSectionProps {
+    sectionId: string;
+  }
+
+  const scrollToSection = ({ sectionId }: ScrollToSectionProps) => {
     const element = document.getElementById(sectionId);
     if (element) {
       const offset = 80; // Adjust this value based on your header height
@@ -117,7 +125,7 @@ const Header = ({ activeSection, setActiveStatus }) => {
               {navItems.map((item) => (
                 <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(item.id)}
+                    onClick={() => scrollToSection({ sectionId: item.id })}
                     className='relative px-3 py-2 group'
                   >
                     {/* Background highlight */}
@@ -189,7 +197,7 @@ const Header = ({ activeSection, setActiveStatus }) => {
               {navItems.map((item) => (
                 <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(item.id)}
+                    onClick={() => scrollToSection({ sectionId: item.id })}
                     className={`w-full text-left px-4 py-2 transition-colors ${
                       activeSection === item.id
                         ? "bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text font-medium"
@@ -303,11 +311,12 @@ const Home = () => {
               className='mt-8'
             >
               <button
-                onClick={() =>
-                  document
-                    .getElementById("projects")
-                    .scrollIntoView({ behavior: "smooth" })
-                }
+                onClick={() => {
+                  const projectsSection = document.getElementById("projects");
+                  if (projectsSection) {
+                    projectsSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
                 className='px-6 py-3 text-lg font-medium text-zinc-300 hover:text-blue-400 transition-colors rounded-lg border border-zinc-700 hover:border-blue-400'
               >
                 View My Work
@@ -431,9 +440,9 @@ const Home = () => {
             <h2 className='text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4'>
               Get in Touch
             </h2>
-            <p className='text-zinc-400 text-lg max-w-2xl mx-auto'>
+            {/* <p className='text-zinc-400 text-lg max-w-2xl mx-auto'>
               Let's discuss your next project
-            </p>
+            </p> */}
           </motion.div>
 
           <div className='max-w-2xl mx-auto space-y-6'>
