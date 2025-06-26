@@ -116,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
             whileHover={{ scale: 1.05 }}
             className='text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text'
           >
-            Vijay kanth
+            VG
           </motion.div>
 
           <div className='flex items-center'>
