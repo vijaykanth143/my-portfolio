@@ -114,9 +114,10 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
         <nav className='flex justify-between items-center'>
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className='text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text'
+            onClick={() => scrollToSection({ sectionId: "home" })}
+            className='text-xl cursor-pointer font-bold bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text'
           >
-            Vijaykanth
+            VG
           </motion.div>
 
           <div className='flex items-center'>
@@ -211,54 +212,94 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
 const Home = () => {
   const [activeSection, setActiveSection] = useState("home");
 
+  // const projects = [
+  //   {
+  //     title: "Shaker Group Maintenance",
+  //     description:
+  //       "Mobile app for Shaker Group technicians to track job orders and statuses. Improved UI/UX for better usability and efficiency in job tracking. Integrated REST API calls for seamless order tracking and consumer activation.",
+  //     tech: ["React Native", "REST API", "RTK Query", "Jest"],
+  //   },
+  //   {
+  //     title: "MIVIS Assistance",
+  //     description:
+  //       "Built web and mobile applications for an international insurance and reinsurance platform. Designed an intuitive and interactive user interface for seamless client interactions. Implemented API integrations to streamline insurance and claim processes.",
+  //     tech: ["React Native", "React.js", "Material UI", "REST API"],
+  //   },
+  //   {
+  //     title: "BeRightHere",
+  //     description:
+  //       "Developed a digital platform for workspace and meeting space booking. Designed and implemented a responsive and engaging UI. Integrated APIs to enhance search, booking, and user management functionalities.",
+  //     tech: ["React Native", "React.js", "Tailwind CSS", "Material UI"],
+  //   },
+  //   {
+  //     title: "Nimble Connect",
+  //     description:
+  //       "Created a donor engagement platform with a user-friendly interface. Integrated calling features using Amazon Connect Streams for secure communication. Implemented responsive design to ensure seamless cross-device compatibility.",
+  //     tech: ["React.js", "Tailwind CSS", "Amazon Connect", "Jest"],
+  //   },
+  // ];
   const projects = [
     {
-      title: "Shaker Group Maintenance",
+      title: "Interval 360 – AI-Powered 360° Feedback Platform",
       description:
-        "Mobile app for Shaker Group technicians to track job orders and statuses. Improved UI/UX for better usability and efficiency in job tracking. Integrated REST API calls for seamless order tracking and consumer activation.",
-      tech: ["React Native", "REST API", "RTK Query", "Jest"],
+        "Developed a responsive HR feedback application with React.js, TypeScript, and Tailwind CSS for 360-degree surveys and evaluations. Implemented role-based portals (Super Admin, HR Admin, Employees) with automated workflows for feedback collection and reporting. Integrated AI features using Groq LLaMA 70B for real-time conversational feedback and analytics.",
+      tech: [
+        "React.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Redux Toolkit",
+        "RTK Query",
+        "RESTful APIs",
+        "Git",
+      ],
     },
     {
-      title: "MIVIS Assistance",
+      title: "Nimble Connect – Donor Engagement Platform",
       description:
-        "Built web and mobile applications for an international insurance and reinsurance platform. Designed an intuitive and interactive user interface for seamless client interactions. Implemented API integrations to streamline insurance and claim processes.",
-      tech: ["React Native", "React.js", "Material UI", "REST API"],
+        "Built responsive donor management interfaces and campaign dashboards using React.js, TypeScript, and Tailwind CSS. Implemented real-time campaign management UIs with automated outreach workflows. Integrated AWS Connect for secure communications and used RTK Query for efficient API data handling.",
+      tech: [
+        "React.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "AWS Connect",
+        "RTK Query",
+        "RESTful APIs",
+        "Git",
+      ],
     },
     {
-      title: "BeRightHere",
+      title: "BeRightHere.com – Workspace & Meeting Room Booking",
       description:
-        "Developed a digital platform for workspace and meeting space booking. Designed and implemented a responsive and engaging UI. Integrated APIs to enhance search, booking, and user management functionalities.",
-      tech: ["React Native", "React.js", "Tailwind CSS", "Material UI"],
-    },
-    {
-      title: "Nimble Connect",
-      description:
-        "Created a donor engagement platform with a user-friendly interface. Integrated calling features using Amazon Connect Streams for secure communication. Implemented responsive design to ensure seamless cross-device compatibility.",
-      tech: ["React.js", "Tailwind CSS", "Amazon Connect", "Jest"],
+        "Developed and maintained a responsive booking platform optimized for professionals, startups, and enterprises. Designed intuitive UIs and integrated RESTful APIs to display real-time availability and manage secure bookings.",
+      tech: ["React.js", "JavaScript (ES6+)", "CSS", "RESTful APIs", "Git"],
     },
   ];
 
   const skills = [
     {
       title: "Frontend Development",
-      description: "React.js, React Native, Redux, Modern React Patterns",
+      description:
+        "Multiplatform Front End Development with React.js, JavaScript (ES6+), TypeScript, Responsive Design, Cross-Platform UI Development",
     },
     {
-      title: "UI Frameworks",
-      description: "Tailwind CSS, Material UI, Bootstrap",
+      title: "State Management",
+      description: "Redux, Redux Toolkit",
     },
     {
       title: "API Integration",
-      description: "REST APIs, RTK Query, Axios",
+      description:
+        "RESTful APIs, Third-Party API Integration (OpenAI APIs, Amazon Streams), RTK Query, Axios",
     },
     {
-      title: "Testing & Tools",
-      description: "Jest, Git, Agile methodologies",
+      title: "UI Frameworks & Tools",
+      description:
+        "Tailwind CSS, Material UI, Git, Agile/Scrum Methodologies, Unit Testing (Vitest)",
     },
   ];
 
   const handleDownloadResume = () => {
     // Replace with your resume download link
+    alert("Downloading Resume...");
     // using Java Script method to get PDF file
     fetch("/vijaykanth.G.pdf").then((response) => {
       response.blob().then((blob) => {
@@ -300,7 +341,7 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               style={{ lineHeight: "100px" }}
-              className='text-5xl md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-6'
+              className='text-5xl  md:text-6xl lg:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-6'
             >
               Vijayakanth G
             </motion.h1>
