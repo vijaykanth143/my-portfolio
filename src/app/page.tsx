@@ -299,7 +299,7 @@ const Home = () => {
 
   const handleDownloadResume = () => {
     // Replace with your resume download link
-    alert("Downloading Resume...");
+
     // using Java Script method to get PDF file
     fetch("/vijaykanth.G.pdf").then((response) => {
       response.blob().then((blob) => {
