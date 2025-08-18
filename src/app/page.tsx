@@ -570,86 +570,98 @@ import {
   TextGenerateEffect,
 } from "@/components/ui/animated-cards";
 
+// ----------------- Interfaces -----------------
 interface HeaderProps {
   activeSection: string;
   setActiveStatus: (section: string) => void;
 }
 
+interface EnhancedSkillCardProps {
+  title: string;
+  description: string;
+  icon: string;
+  index: number;
+}
+
+interface Project {
+  title: string;
+  description: string;
+  tech: string[];
+  duration: string;
+}
+
+interface Skill {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+// ----------------- Header Component -----------------
 const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleScroll = () => {
-        setIsScrolled(window.scrollY > 20);
-      };
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      let timeoutId: NodeJS.Timeout;
+    let timeoutId: ReturnType<typeof setTimeout>;
 
-      const handleSectionVisibility = () => {
-        const sections = ["home", "skills", "projects", "contact"];
-        const scrollPosition = window.scrollY + window.innerHeight / 2;
+    const handleSectionVisibility = () => {
+      const sections = ["home", "skills", "projects", "contact"];
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      let newActiveSection = activeSection;
 
-        let newActiveSection = activeSection;
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { top, bottom } = element.getBoundingClientRect();
+          const elementTop = top + window.scrollY;
+          const elementBottom = bottom + window.scrollY;
 
-        for (const section of sections) {
-          const element = document.getElementById(section);
-          if (element) {
-            const { top, bottom } = element.getBoundingClientRect();
-            const elementTop = top + window.scrollY;
-            const elementBottom = bottom + window.scrollY;
-
-            if (
-              scrollPosition >= elementTop &&
-              scrollPosition < elementBottom
-            ) {
-              newActiveSection = section;
-              break;
-            }
+          if (scrollPosition >= elementTop && scrollPosition < elementBottom) {
+            newActiveSection = section;
+            break;
           }
         }
+      }
 
-        if (newActiveSection !== activeSection) {
-          setActiveStatus(newActiveSection);
-        }
-      };
+      if (newActiveSection !== activeSection) {
+        setActiveStatus(newActiveSection);
+      }
+    };
 
-      const debouncedScrollHandler = () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(handleSectionVisibility, 50);
-      };
+    const debouncedScrollHandler = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleSectionVisibility, 50);
+    };
 
-      window.addEventListener("scroll", debouncedScrollHandler);
-      return () => {
-        window.removeEventListener("scroll", debouncedScrollHandler);
-        clearTimeout(timeoutId);
-      };
-    }
+    window.addEventListener("scroll", debouncedScrollHandler);
+    return () => {
+      window.removeEventListener("scroll", debouncedScrollHandler);
+      clearTimeout(timeoutId);
+    };
   }, [activeSection, setActiveStatus]);
 
   const scrollToSection = ({ sectionId }: { sectionId: string }) => {
-    if (typeof window !== "undefined") {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const offset = 80;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.scrollY - offset;
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - offset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
 
-        setActiveStatus(sectionId);
-        setIsMobileMenuOpen(false);
-      }
+      setActiveStatus(sectionId);
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -768,8 +780,13 @@ const Header: React.FC<HeaderProps> = ({ activeSection, setActiveStatus }) => {
   );
 };
 
-// Enhanced Skill Card Component
-const EnhancedSkillCard = ({ title, description, icon, index }) => {
+// ----------------- Enhanced Skill Card -----------------
+const EnhancedSkillCard: React.FC<EnhancedSkillCardProps> = ({
+  title,
+  description,
+  icon,
+  index,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -872,10 +889,11 @@ const EnhancedSkillCard = ({ title, description, icon, index }) => {
   );
 };
 
-const Home = () => {
+// ----------------- Home Page Component -----------------
+const Home: React.FC = () => {
   const [activeSection, setActiveSection] = useState("home");
 
-  const projects = [
+  const projects: Project[] = [
     {
       title: "Interval 360 – SaaS-based AI-Powered 360° Feedback Platform",
       description:
@@ -922,7 +940,7 @@ const Home = () => {
     },
   ];
 
-  const skills = [
+  const skills: Skill[] = [
     {
       title: "Frontend Technologies",
       description:
@@ -950,7 +968,6 @@ const Home = () => {
   ];
 
   const handleDownloadResume = () => {
-    // Replace with your resume download link
     fetch("/vijaykanth.G.pdf").then((response) => {
       response.blob().then((blob) => {
         const fileURL = window.URL.createObjectURL(blob);
@@ -1018,11 +1035,9 @@ const Home = () => {
           >
             <button
               onClick={() => {
-                if (typeof document !== "undefined") {
-                  const projectsSection = document.getElementById("projects");
-                  if (projectsSection) {
-                    projectsSection.scrollIntoView({ behavior: "smooth" });
-                  }
+                const projectsSection = document.getElementById("projects");
+                if (projectsSection) {
+                  projectsSection.scrollIntoView({ behavior: "smooth" });
                 }
               }}
               className='px-6 py-3 text-lg font-medium text-zinc-300 hover:text-blue-400 transition-colors rounded-lg border border-zinc-700 hover:border-blue-400'
@@ -1071,7 +1086,7 @@ const Home = () => {
               <span className='bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 animate-pulse'>
                 Technical Skills
               </span>
-              {/* Floating particles around title */}
+              {/* Floating particles */}
               <motion.div
                 className='absolute -top-4 -left-4 w-2 h-2 bg-blue-400 rounded-full'
                 animate={{
@@ -1148,7 +1163,6 @@ const Home = () => {
               { number: "3.8+", label: "Years Experience" },
               { number: "15+", label: "Technologies" },
               { number: "5+", label: "Major Projects" },
-              // { number: "100%", label: "Client Satisfaction" },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -1260,8 +1274,7 @@ const Home = () => {
               Get in Touch
             </h2>
             <p className='text-zinc-400 text-lg max-w-2xl mx-auto'>
-              Ready to collaborate on exciting frontend projects? Let&#39;s
-              connect!
+              Ready to collaborate on exciting frontend projects? Let's connect!
             </p>
           </motion.div>
 
@@ -1311,7 +1324,7 @@ const Home = () => {
                     <path
                       strokeLinecap='round'
                       strokeLinejoin='round'
-                      strokeWidth='2'
+                      strokeWidth={2}
                       d={contact.icon}
                     />
                   </svg>
