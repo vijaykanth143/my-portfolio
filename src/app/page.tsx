@@ -569,7 +569,6 @@ import {
   StunningButton,
   TextGenerateEffect,
 } from "@/components/ui/animated-cards";
-import { ProjectCard, SkillCard } from "@/components/ui/project-cards";
 
 interface HeaderProps {
   activeSection: string;
@@ -1261,7 +1260,8 @@ const Home = () => {
               Get in Touch
             </h2>
             <p className='text-zinc-400 text-lg max-w-2xl mx-auto'>
-              Ready to collaborate on exciting frontend projects? Let's connect!
+              Ready to collaborate on exciting frontend projects? Let&#39;s
+              connect!
             </p>
           </motion.div>
 
